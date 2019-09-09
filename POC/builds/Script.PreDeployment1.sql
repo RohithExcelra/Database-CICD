@@ -19,5 +19,23 @@ Begin
 END
 Go
 
+------------------------------------------------------------------------------------------------------------------------------
+
+IF Exists(Select 1 from INFORMATION_SCHEMA.TABLES WHERE Table_Type = 'BASE TABLE' and Table_Name = 'Map') 
+Begin
+	Declare @mapcount AS INT;
+	Select @mapcount = Count(1) from dbo.Map 
+	
+	IF @mapcount > 0
+	BEGIN
+		DECLARE @tablename as NVARCHAR(100)
+		SET @tablename = 'Map_Bkp_'+CONVERT(VARCHAR(19), GETDATE(), 120)
+		EXEC ('SELECT * INTO [dbo].['+@tablename+'] FROM [dbo].[Map]' )
+
+		DELETE FROM [dbo].[Map]
+	END
+END
+Go
 
 ------------------------------------------------------------------------------------------------------------------------------
+
